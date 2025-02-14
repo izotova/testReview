@@ -1,0 +1,18 @@
+{
+    "vendor_review": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "product_id": true,
+            "rating": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "VENDOR_REVIEW_CUSTOMER_ID_PRODUCT_ID": true,
+            "VENDOR_REVIEW_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "VENDOR_REVIEW_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID": true
+        }
+    }
+}

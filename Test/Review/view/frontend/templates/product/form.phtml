@@ -1,0 +1,31 @@
+<?php
+/**
+ * @var $viewModel \Test\Review\ViewModel\RatingForm
+ * @var $block \Test\Review\Block\RatingForm
+ */
+
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($block->isCustomerLoggedIn()): ?>
+<h1><?php echo $block->escapeHtml($viewModel->getTitle()); ?> : <?php echo $block->getRating()?></h1>
+
+<div class="custom-rating">
+    <select id="custom-rating" name="custom-rating">
+        <option class="option" value="0"><?php echo $block->escapeHtml($viewModel->getDropdownTitle()); ?></option>
+        <option class="option" value="1">Not Good</option>
+        <option class="option" value="2">Good</option>
+        <option class="option" value="3">Exelent</option>
+        <option class="option" value="4">Nice</option>
+        <option class="option" value="5">Amazing</option>
+    </select>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#custom-rating": {
+            "ratingForm": <?= /* @noEscape */ $block->getComponentJsonConfig() ?>
+        }
+    }
+</script>
+<?php endif; ?>

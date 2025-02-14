@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Andrii, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Test\Review\Api\Data\ReviewSearchResultsInterface" type="Test\Review\Model\ReviewSearchResults" />
+    <preference for="Test\Review\Api\Data\ReviewSearchResultsInterface" type="Test\Review\Model\ReviewSearchResults" />
+    <preference for="Test\Review\Api\Data\ReviewInterface" type="Test\Review\Model\Review" />
+    <preference for="Test\Review\Api\ReviewRepositoryInterface" type="Test\Review\Model\ReviewRepository" />
+    <virtualType name="Test\Review\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Test\Review\Model\ReviewRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Test\Review\Model\Api\SearchCriteria\ReviewCollectionProcessor</argument>
+            <argument name="hydrator" xsi:type="object">Magento\Framework\EntityManager\AbstractModelHydrator</argument>
+        </arguments>
+    </type>
+    <type name="Test\Review\ViewModel\RatingForm">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>

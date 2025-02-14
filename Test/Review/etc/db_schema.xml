@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Andrii, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="vendor_review" resource="default" engine="innodb" comment="Vendor Review">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true"
+                comment="ID"/>
+        <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Customer ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" identity="false" comment="Product ID"/>
+        <column xsi:type="smallint" name="rating" unsigned="true" nullable="false" identity="false" default="0" comment="Rating"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" comment="Creation Time"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" comment="Updated Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="VENDOR_REVIEW_CUSTOMER_ID_CUSTOMER_ENTITY_CUSTOMER_ID"
+                    table="vendor_review" column="customer_id"
+                    referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="VENDOR_REVIEW_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="vendor_review" column="product_id" referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+</schema>
