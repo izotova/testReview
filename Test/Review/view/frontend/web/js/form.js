@@ -1,8 +1,13 @@
 define(['jquery'], function ($) {
     return function (config, element) {
+        var action = 'rest/V1/addNewReview';
+        var requestType = 'POST';
         // set if user voted before
+        console.log(config);
         if (config.review && config.review.rating) {
             $("#custom-rating").val(config.review.rating);
+            action = 'rest/V1/updateReview/' + config.review.id;
+            requestType = 'PUT';
         }
 
         $("#custom-rating").on('change', function () {
@@ -15,9 +20,10 @@ define(['jquery'], function ($) {
                     'rating': ratingValue
                 }
             };
+
             $.ajax({
-                type: "POST",
-                url: 'rest/V1/addNewReview',
+                type: requestType,
+                url: action,
                 data: JSON.stringify(formData),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",

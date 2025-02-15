@@ -13,6 +13,9 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Registry;
 use Test\Review\Api\ReviewRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Test\Review\Api\ServiceCalculateProductRating;
+use Psr\Log\LoggerInterface;
+use Magento\Catalog\Model\Product;
 
 class RatingForm extends Template
 {
@@ -25,6 +28,8 @@ class RatingForm extends Template
         private readonly SearchCriteriaBuilder $searchCriteriaBuilder,
         private readonly SortOrderBuilder $sortOrderBuilder,
         private readonly Registry $registry,
+        private readonly ServiceCalculateProductRating $serviceCalculateProductRating,
+        private readonly LoggerInterface $logger,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -37,18 +42,25 @@ class RatingForm extends Template
         );
     }
 
-    private function getCusomerDataRequest(): array
+    private function getCusomerDataRequest(): ?array
     {
-        return [
+        $rating = $this->getCustomerRatingForProduct();
+        $response = [
             'review' => [
                 'customer_id' => $this->customerSession->getCustomer()->getId(),
                 'product_id' => $this->getCurrentProduct()->getId(),
-                'rating' => $this->getCustomerRatingForProduct(),
             ]
         ];
+
+        if (isset($rating['id'])) {
+            $response['review']['id'] =  $rating['id'];
+            $response['review']['rating'] = $rating['rating'];
+        }
+
+        return $response;
     }
 
-    private function getCurrentProduct()
+    private function getCurrentProduct(): ?Product
     {
         return $this->registry->registry('current_product');
     }
@@ -58,7 +70,7 @@ class RatingForm extends Template
         return $this->customerSession->isLoggedIn();
     }
 
-    private function getCustomerRatingForProduct(): ?int
+    private function getCustomerRatingForProduct(): ?array
     {
         $this->searchCriteriaBuilder->addFilter('customer_id', $this->customerSession->getCustomer()->getId());
         $this->searchCriteriaBuilder->addFilter('product_id', $this->getCurrentProduct()->getId());
@@ -74,28 +86,26 @@ class RatingForm extends Template
 
         $items = $this->reviewRepository->getList($searchCriteria)->getItems();
 
-        if (is_array($items)) {
-            return current($items)->getRating();
+        if (is_array($items) && count($items) > 0) {
+            return [
+                'rating' => current($items)->getRating(),
+                'id' => current($items)->getId()
+            ];
         }
 
         return null;
     }
 
-    public function getRating(): ?string
+    public function getRating(): string
     {
-        $this->searchCriteriaBuilder->addFilter('product_id', $this->getCurrentProduct()->getId());
-        $searchCriteria = $this->searchCriteriaBuilder->create();
-        $items = $this->reviewRepository->getList($searchCriteria)->getItems();
-
-        if (is_array($items)) {
-            $amount = count($items);
-            $rating = 0;
-            foreach ($items as $item) {
-                $rating += (int)$item->getRating();
-            }
-            return sprintf('%d/%d', round($rating/$amount), 5);
+        try {
+            $rating = $this->serviceCalculateProductRating->calculate(
+                (int)$this->getCurrentProduct()->getId()
+            );
+        } catch (\Exception $e) {
+            $this->logger->critical('Something gone wrong');
         }
 
-        return null;
+        return $rating;
     }
 }

@@ -5,10 +5,11 @@
  */
 
 $viewModel = $block->getViewModel();
+//var_dump($block->getComponentJsonConfig());exit();
 ?>
 
 <?php if ($block->isCustomerLoggedIn()): ?>
-<h1><?php echo $block->escapeHtml($viewModel->getTitle()); ?> : <?php echo $block->getRating()?></h1>
+<h1><?php echo $block->escapeHtml($viewModel->getTitle()); ?> : <?php echo $block->getRating(); ?></h1>
 
 <div class="custom-rating">
     <select id="custom-rating" name="custom-rating">
@@ -20,6 +21,7 @@ $viewModel = $block->getViewModel();
         <option class="option" value="5">Amazing</option>
     </select>
 </div>
+
 
 <script type="text/x-magento-init">
     {

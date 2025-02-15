@@ -10,6 +10,7 @@
     <preference for="Test\Review\Api\Data\ReviewSearchResultsInterface" type="Test\Review\Model\ReviewSearchResults" />
     <preference for="Test\Review\Api\Data\ReviewInterface" type="Test\Review\Model\Review" />
     <preference for="Test\Review\Api\ReviewRepositoryInterface" type="Test\Review\Model\ReviewRepository" />
+    <preference for="Test\Review\Api\ServiceCalculateProductRating" type="Test\Review\Service\CalculateProductRating" />
     <virtualType name="Test\Review\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
         <arguments>
             <argument name="processors" xsi:type="array">
@@ -28,4 +29,5 @@
             <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
         </arguments>
     </type>
+
 </config>
