@@ -6,7 +6,6 @@
 
 namespace Test\Review\Model;
 
-use sprintf;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\App\ObjectManager;
@@ -14,18 +13,18 @@ use Magento\Framework\EntityManager\HydratorInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Webapi\Rest\Request;
+use Psr\Log\LoggerInterface;
+use sprintf;
 use Test\Review\Api\Data;
 use Test\Review\Api\Data\ReviewInterface;
 use Test\Review\Api\Data\ReviewSearchResultsInterface;
 use Test\Review\Api\ReviewRepositoryInterface;
-use Test\Review\Model\Review;
-use Test\Review\Model\ReviewFactory;
+use Test\Review\Api\ValidateRatingInterface;
 use Test\Review\Model\ResourceModel\Review as ResourceReview;
 use Test\Review\Model\ResourceModel\Review\Collection as CollectionReview;
 use Test\Review\Model\ResourceModel\Review\CollectionFactory as CollectionFactoryReview;
-use Magento\Framework\Webapi\Rest\Request;
-use Test\Review\Api\ValidateRatingInterface;
-use Psr\Log\LoggerInterface;
+
 /**
  * Default repo impl.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
