@@ -6,6 +6,7 @@
 
 namespace Test\Review\Model;
 
+use sprintf;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\App\ObjectManager;
@@ -23,7 +24,8 @@ use Test\Review\Model\ResourceModel\Review as ResourceReview;
 use Test\Review\Model\ResourceModel\Review\Collection as CollectionReview;
 use Test\Review\Model\ResourceModel\Review\CollectionFactory as CollectionFactoryReview;
 use Magento\Framework\Webapi\Rest\Request;
-
+use Test\Review\Api\ValidateRatingInterface;
+use Psr\Log\LoggerInterface;
 /**
  * Default repo impl.
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -36,6 +38,8 @@ class ReviewRepository implements ReviewRepositoryInterface
         private readonly ReviewFactory $reviewFactory,
         private readonly Data\ReviewSearchResultsInterfaceFactory $searchResultsFactory,
         private readonly Request $request,
+        private readonly ValidateRatingInterface $validateRating,
+        private readonly LoggerInterface $logger,
         private          CollectionProcessorInterface $collectionProcessor,
         private          ?HydratorInterface $hydrator = null,
     ) {
@@ -46,11 +50,14 @@ class ReviewRepository implements ReviewRepositoryInterface
 
     public function save(ReviewInterface $review): bool
     {
-
         try {
             $reviewId = (int)$this->request->getParam('id');
             if ($reviewId && !($review instanceof Review && $review->getOrigData())) {
                 $review = $this->hydrator->hydrate($this->getById($reviewId), $this->hydrator->extract($review));
+            }
+            if (!$this->validateRating->validate($review->getRating())){
+                $this->logger->info(sprintf('Rating value is wrong %d', $review->getRating()));
+                throw new \Exception('Rating value is wrong');
             }
             $this->resource->save($review);
         } catch (\Exception $exception) {

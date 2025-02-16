@@ -11,6 +11,7 @@
     <preference for="Test\Review\Api\Data\ReviewInterface" type="Test\Review\Model\Review" />
     <preference for="Test\Review\Api\ReviewRepositoryInterface" type="Test\Review\Model\ReviewRepository" />
     <preference for="Test\Review\Api\ServiceCalculateProductRating" type="Test\Review\Service\CalculateProductRating" />
+    <preference for="Test\Review\Api\ValidateRatingInterface" type="Test\Review\Service\ValidateRating" />
     <virtualType name="Test\Review\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
         <arguments>
             <argument name="processors" xsi:type="array">
